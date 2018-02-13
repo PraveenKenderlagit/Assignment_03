@@ -8,7 +8,8 @@ output: pdf_document
 ```{R}
 BP2010 <- read.csv("BP Apprehensions 2010.csv", header = TRUE, stringsAsFactors = FALSE)
 rownames(BP2010) <- BP2010[,1]
-barplot(BP2010[1:9,13], names.arg = rownames(BP2010)[1:9],
+barplot(BP2010[1:9,13], names.arg = rownames(BP2010)[1:9])
+x <- barplot(BP2010[1:9,13], names.arg = rownames(BP2010)[1:9],
         las=2,
         axisnames=TRUE,
         main="2010 Border Patrol Apprehensions by Sector",
@@ -26,7 +27,7 @@ barplot(PB2017[1:9,13], names.arg = rownames(PB2017)[1:9],
         border="blue",
         col="yellow")
 
-PBmonthly <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFactors = TRUE)
+PBmonthly <- read.csv("monthly_sum.csv", header = TRUE, stringsAsFactors = TRUE)
 rownames(PBmonthly) <- PBmonthly[,1]
 barplot(PBmonthly[1:9,13], names.arg = rownames(PBmonthly)[1:9],
         las=2,
