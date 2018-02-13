@@ -1,0 +1,38 @@
+---
+title: "Assignment 3"
+author: "Steven Tran"
+date: "February 7, 2018"
+output: pdf_document
+---
+
+```{R}
+BP2010 <- read.csv("BP Apprehensions 2010.csv", header = TRUE, stringsAsFactors = FALSE)
+rownames(BP2010) <- BP2010[,1]
+barplot(BP2010[1:9,13], names.arg = rownames(BP2010)[1:9],
+        las=2,
+        axisnames=TRUE,
+        main="2010 Border Patrol Apprehensions by Sector",
+        border="blue",
+        col="yellow")
+
+
+
+PB2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors = TRUE)
+rownames(PB2017) <- PB2017[,1]
+barplot(PB2017[1:9,13], names.arg = rownames(PB2017)[1:9],
+        las=2,
+        axisnames=TRUE,
+        main="2017 Border Patrol Apprehensions by Sector",
+        border="blue",
+        col="yellow")
+
+PBmonthly <- read.csv("PB monthly summaries.csv", header = TRUE, stringsAsFactors = TRUE)
+rownames(PBmonthly) <- PBmonthly[,1]
+barplot(PBmonthly[1:9,13], names.arg = rownames(PBmonthly)[1:9],
+        las=2,
+        axisnames=TRUE,
+        main="2010 Border Patrol Apprehensions by Year",
+        border="blue",
+        col="yellow")
+
+```
