@@ -6,8 +6,6 @@ output: pdf_document
 ---
 
 ```{R}
-
-
 BP2010 <- read.csv("BP Apprehensions 2010.csv", header = TRUE, stringsAsFactors = FALSE)
 rownames(BP2010) <- BP2010[,1]
 x <- barplot(BP2010[1:9,13], names.arg = rownames(BP2010)[1:9],
@@ -36,7 +34,31 @@ barplot(PBmonthly[1:9,13], names.arg = rownames(PBmonthly)[1:9],
         border="blue",
         col="yellow")
 
-data <- matrix(c(BP2010[1:9,2], PB2017[1:9,2]), nrow = 2, byrow = TRUE)
-barplot(data, beside = TRUE, col = c("blue", "red"), names.arg = rownames(BP2010))
+sideBySideMatrix <- function(month){
+  matrix(c(BP2010[1:9,month], PB2017[1:9,month]), nrow = 2, byrow = TRUE)
+}
 
+sideBySideBarPlot <- function(month, monthString){
+  barplot(sideBySideMatrix(month), names.arg = rownames(BP2010),
+          las=2,
+          axisnames=TRUE,
+          beside=TRUE,
+          col=c("blue", "red"),
+          main = paste("2010 vs 2017 Border Patrol Apprehensions in", monthString, sep=" "))
+  legend("topleft", 
+       c("2010", "2017"), 
+       fill = c("blue", "red"))
+}
+
+sideBySideBarPlot(2, "October")
+sideBySideBarPlot(3, "November")
+sideBySideBarPlot(4, "December")
+sideBySideBarPlot(5, "January")
+sideBySideBarPlot(6, "February")
+sideBySideBarPlot(7, "March")
+sideBySideBarPlot(8, "April")
+sideBySideBarPlot(9, "June")
+sideBySideBarPlot(10, "July")
+sideBySideBarPlot(11, "August")
+sideBySideBarPlot(12, "September")
 ```
