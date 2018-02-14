@@ -6,6 +6,8 @@ output: pdf_document
 ---
 
 ```{R}
+library(tidyverse)
+
 BP2010 <- read.csv("BP Apprehensions 2010.csv", header = TRUE, stringsAsFactors = FALSE)
 rownames(BP2010) <- BP2010[,1]
 x <- barplot(BP2010[1:9,13], names.arg = rownames(BP2010)[1:9],
@@ -61,4 +63,15 @@ sideBySideBarPlot(9, "June")
 sideBySideBarPlot(10, "July")
 sideBySideBarPlot(11, "August")
 sideBySideBarPlot(12, "September")
+
+x1 <- data.frame(sideBySideMatrix(2))
+x1 <- cbind(data.frame(matrix =c(2010, 2017), nrow = 2, byrow = TRUE), x1)
+x1 <- as.factor(t(x))
+y1 <- ts(rev(x), start = 1, frequency = 12)
+ts.plot(y1)
+
+
+x <- as.vector(t(PBmonthly))
+y <- ts(rev(x), start = c(2000, 10), frequency = 12)
+ts.plot(y, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)))
 ```
