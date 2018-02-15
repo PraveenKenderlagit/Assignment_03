@@ -38,7 +38,7 @@ disp_by_year <- function(plottype){
     return(barplot(PBmonthly[1:9,13], names.arg = rownames(PBmonthly)[1:9],
           las=2,
           axisnames=TRUE,
-          main="Border Patrol Apprehensions by Year 2010 - 2017",
+          main="Border Patrol Apprehensions by Year",
           border="blue",
           col="yellow"))
   }
