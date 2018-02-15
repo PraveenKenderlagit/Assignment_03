@@ -6,9 +6,13 @@ output: pdf_document
 ---
 
 ```{R}
-library(tidyverse)
-
+## Reading in Data
 BP2010 <- read.csv("BP Apprehensions 2010.csv", header = TRUE, stringsAsFactors = FALSE)
+PB2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors = TRUE)
+PBmonthly <- read.csv("monthly_sum.csv", header = TRUE, stringsAsFactors = TRUE)
+rownames(PBmonthly) <- PBmonthly[,1]
+
+## Displaying Data By Sector
 rownames(BP2010) <- BP2010[,1]
 x <- barplot(BP2010[1:9,13], names.arg = rownames(BP2010)[1:9],
         las=2,
@@ -17,8 +21,6 @@ x <- barplot(BP2010[1:9,13], names.arg = rownames(BP2010)[1:9],
         border="blue",
         col="yellow")
 
-
-PB2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors = TRUE)
 rownames(PB2017) <- PB2017[,1]
 barplot(PB2017[1:9,13], names.arg = rownames(PB2017)[1:9],
         las=2,
@@ -27,8 +29,7 @@ barplot(PB2017[1:9,13], names.arg = rownames(PB2017)[1:9],
         border="blue",
         col="yellow")
 
-PBmonthly <- read.csv("monthly_sum.csv", header = TRUE, stringsAsFactors = TRUE)
-rownames(PBmonthly) <- PBmonthly[,1]
+##Display Data By Year
 barplot(PBmonthly[1:9,13], names.arg = rownames(PBmonthly)[1:9],
         las=2,
         axisnames=TRUE,
@@ -36,10 +37,21 @@ barplot(PBmonthly[1:9,13], names.arg = rownames(PBmonthly)[1:9],
         border="blue",
         col="yellow")
 
+## T-test for Max in 2010 (Tucson) and Max in 2017 (Rio Grande Valley)
+x <- subset(BP2010, select=-c(Sector))
+x <- cbind(x,rowSums(x))
+x <- t(x)
+y <- subset(PB2017, select=-c(Sector))
+y <- cbind(y,rowSums(y))
+y <- t(y)
+t.test(x[,8], y[,6])
+
+## Creates a 2 x 9 matrix from the 2010 data and 2017 for specified month
 sideBySideMatrix <- function(month){
   matrix(c(BP2010[1:9,month], PB2017[1:9,month]), nrow = 2, byrow = TRUE)
 }
 
+## Creates the barplot for a given month
 sideBySideBarPlot <- function(month, monthString){
   barplot(sideBySideMatrix(month), names.arg = rownames(BP2010),
           las=2,
@@ -52,6 +64,7 @@ sideBySideBarPlot <- function(month, monthString){
        fill = c("blue", "red"))
 }
 
+## Creates the side by side bar plots for each month
 sideBySideBarPlot(2, "October")
 sideBySideBarPlot(3, "November")
 sideBySideBarPlot(4, "December")
