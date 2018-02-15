@@ -37,14 +37,10 @@ barplot(rev(PBmonthly[1:9,13]), names.arg = rev(rownames(PBmonthly)[1:9]),
         border="blue",
         col="yellow")
 
-## T-test for Max in 2010 (Tucson) and Max in 2017 (Rio Grande Valley)
-x <- subset(BP2010, select=-c(Sector))
-x <- cbind(x,rowSums(x))
-x <- t(x)
-y <- subset(PB2017, select=-c(Sector))
-y <- cbind(y,rowSums(y))
-y <- t(y)
-t.test(x[,8], y[,6])
+## T-test for Tucson in 2010 and Rio Grande Valley in 2017
+t2010 <- t(BP2010)
+t2017 <- t(PB2017)
+
 
 ## Creates a 2 x 9 matrix from the 2010 data and 2017 for specified month
 sideBySideMatrix <- function(month){
