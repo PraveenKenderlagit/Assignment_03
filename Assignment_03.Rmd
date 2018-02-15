@@ -40,6 +40,21 @@ barplot(rev(PBmonthly[1:9,13]), names.arg = rev(rownames(PBmonthly)[1:9]),
 ## T-test for Tucson in 2010 and Rio Grande Valley in 2017
 t2010 <- t(BP2010)
 t2017 <- t(PB2017)
+t.test(as.numeric(t2010[2:13, 8]), as.numeric(t2017[2:13, 6]))
+
+plot (PBmonthly$year,PBmonthly$October, xlab = "Year", ylab = "Apprehensions", type = "p", main = "Apprehensions By Year")
+lines(PBmonthly$year,PBmonthly$October, col = "red")
+points(PBmonthly$year,PBmonthly$October, col = "red")
+
+
+
+
+
+
+
+
+
+
 
 
 ## Creates a 2 x 9 matrix from the 2010 data and 2017 for specified month
@@ -61,6 +76,7 @@ sideBySideBarPlot <- function(month, monthString){
 }
 
 ## Creates the side by side bar plots for each month
+par(mfrow=c(2,2))
 sideBySideBarPlot(2, "October")
 sideBySideBarPlot(3, "November")
 sideBySideBarPlot(4, "December")
@@ -74,13 +90,7 @@ sideBySideBarPlot(11, "July")
 sideBySideBarPlot(12, "August")
 sideBySideBarPlot(13, "September")
 
-x1 <- data.frame(sideBySideMatrix(2))
-x1 <- cbind(data.frame(matrix =c(2010, 2017), nrow = 2, byrow = TRUE), x1)
-x1 <- as.factor(t(x))
-y1 <- ts(rev(x), start = 1, frequency = 12)
-ts.plot(y1)
-
-
+par(mfrow=c(1,1))
 x <- as.vector(t(PBmonthly))
 y <- ts(rev(x), start = c(2000, 10), frequency = 12)
 ts.plot(y, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)))
