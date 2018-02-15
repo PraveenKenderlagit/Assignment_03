@@ -30,10 +30,10 @@ barplot(PB2017[1:9,13], names.arg = rownames(PB2017)[1:9],
         col="yellow")
 
 ##Display Data By Year
-barplot(PBmonthly[1:9,13], names.arg = rownames(PBmonthly)[1:9],
+barplot(rev(PBmonthly[1:9,13]), names.arg = rev(rownames(PBmonthly)[1:9]),
         las=2,
         axisnames=TRUE,
-        main="2010 Border Patrol Apprehensions by Year",
+        main="Border Patrol Apprehensions by Year",
         border="blue",
         col="yellow")
 
@@ -72,10 +72,11 @@ sideBySideBarPlot(5, "January")
 sideBySideBarPlot(6, "February")
 sideBySideBarPlot(7, "March")
 sideBySideBarPlot(8, "April")
-sideBySideBarPlot(9, "June")
-sideBySideBarPlot(10, "July")
-sideBySideBarPlot(11, "August")
-sideBySideBarPlot(12, "September")
+sideBySideBarPlot(9, "May")
+sideBySideBarPlot(10, "June")
+sideBySideBarPlot(11, "July")
+sideBySideBarPlot(12, "August")
+sideBySideBarPlot(13, "September")
 
 x1 <- data.frame(sideBySideMatrix(2))
 x1 <- cbind(data.frame(matrix =c(2010, 2017), nrow = 2, byrow = TRUE), x1)
