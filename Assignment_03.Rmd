@@ -94,4 +94,25 @@ par(mfrow=c(1,1))
 x <- as.vector(t(PBmonthly))
 y <- ts(rev(x), start = c(2000, 10), frequency = 12)
 ts.plot(y, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)))
+
+twolineplot <- function(){
+  #overlays the plots of 2 lines 1 blue and 1 red; for use with the apprehensions by month of 2010 and 2017
+  x <-  factor(2:13, labels = c("October", "November", "December", "January", "February", "March", "April","May","June","July","August","September"))
+  t2010 <- as.numeric(PBmonthly[1,2:13])
+  t2017 <- as.numeric(PBmonthly[8, 2:13])
+  plot(t2010 ~ x, type="p", xlab = "Month", ylab = "Apprehensions", main = "Apprehensions By Month", ylim=c(min(t2010),max(t2017)))
+  lines(t2010 ~ x, col="blue")
+  lines(t2017 ~ x, col="red")
+  legend("topleft", 
+         c("2010", "2017"), 
+         fill = c("blue", "red"))
+  
+}
+
+
+```
+Here we can see the plots of 2010 and 2017 monthly overlayed. As you can tell, the number of apprehensions rose steeply from the beginning to the April 2017, decreasing thereafter, whilst there was a fairly steady decline in apprehensions in 2010 until April 2010, followed by a slight incline.
+
+```{R}
+twolineplot()
 ```
