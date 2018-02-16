@@ -108,7 +108,8 @@ twolineplot <- function(){
   x <-  factor(2:13, labels = c("October", "November", "December", "January", "February", "March", "April","May","June","July","August","September"))
   t2010 <- as.numeric(PBmonthly[1,2:13])
   t2017 <- as.numeric(PBmonthly[8, 2:13])
-  plot(t2010 ~ x, type="p", xlab = "Month", ylab = "Apprehensions", main = "Apprehensions By Month", ylim=c(min(t2010),max(t2017)))
+  plot.default(t2010 ~ x, type="n", xlab = "Month", ylab = "Apprehensions", main = "Apprehensions By Month", ylim = c(min(t2010),max(t2017)), xaxt = "n")
+  axis(1, at = as.numeric(x), labels = levels(x))
   lines(t2010 ~ x, col="blue")
   lines(t2017 ~ x, col="red")
   legend("topleft", 
