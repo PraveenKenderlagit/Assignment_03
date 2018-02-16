@@ -177,7 +177,7 @@ server <- function(input, output) {
   output$sector <- renderPlot({sector_plots(strtoi(input$year))})
   
   #handling months tab
-  months = c("September"= 1, "October"=2, "November"=3, "December"=4, "January"=5, "February"=6, "March"=7, "April"=8,"May"=9,"June"=10,"July"=11,"August"=12  )
+  months = c("September"= 13, "October"=2, "November"=3, "December"=4, "January"=5, "February"=6, "March"=7, "April"=8,"May"=9,"June"=10,"July"=11,"August"=12  )
   output$month <- renderPlot({
       sideBySideBarPlot(months[input$month] , input$month)
     
