@@ -42,9 +42,9 @@ t2010 <- t(BP2010)
 t2017 <- t(PB2017)
 t.test(as.numeric(t2010[2:13, 8]), as.numeric(t2017[2:13, 6]))
 
-plot (PBmonthly$year,PBmonthly$October, xlab = "Year", ylab = "Apprehensions", type = "p", main = "Apprehensions By Year")
-lines(PBmonthly$year,PBmonthly$October, col = "red")
-points(PBmonthly$year,PBmonthly$October, col = "red")
+plot (PBmonthly$year,rowSums(PBmonthly[1:18 , 2:13]), xlab = "Year", ylab = "Apprehensions", type = "p", main = "Apprehensions By Year")
+lines(PBmonthly$year,rowSums(PBmonthly[1:18 , 2:13]), col = "red")
+points(PBmonthly$year,rowSums(PBmonthly[1:18 , 2:13]), col = "red")
 
 
 

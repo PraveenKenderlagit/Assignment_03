@@ -34,6 +34,11 @@ disp_by_year <- function(plottype){
     y <- ts(rev(x), start = c(2000, 10), frequency = 12)
     return(ts.plot(y, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3))))
   }
+  else if(plottype == "line2"){
+    plot (PBmonthly$year,rowSums(PBmonthly[1:18 , 2:13]), xlab = "Year", ylab = "Apprehensions", type = "p", main = "Apprehensions By Year")
+    lines(PBmonthly$year,rowSums(PBmonthly[1:18 , 2:13]), col = "red")
+    points(PBmonthly$year,rowSums(PBmonthly[1:18 , 2:13]), col = "red")
+  }
   else{
     return(barplot(PBmonthly[1:9,13], names.arg = rownames(PBmonthly)[1:9],
           las=2,
@@ -65,25 +70,14 @@ sideBySideBarPlot <- function(month, monthString){
 }
 
 ## Creates the side by side bar plots for each month
-#sideBySideBarPlot(2, "October")
-'"
-x1 <- data.frame(sideBySideMatrix(2))
-x1 <- cbind(data.frame(matrix =c(2010, 2017), nrow = 2, byrow = TRUE), x1)
-x1 <- as.factor(t(x))
-y1 <- ts(rev(x), start = 1, frequency = 12)
-ts.plot(y1)
 
-x <- as.vector(t(PBmonthly))
-y <- ts(rev(x), start = c(2000, 10), frequency = 12)
-ts.plot(y, gpars=list(xlab="year", ylab="Apprehensions", lty=c(1:3)))
-"'
 
 comparep <- function(ttest, sigvalue ){
   if(ttest$p.value < as.double(sigvalue)){
-    out <- paste("The t-value of", ttest$p.value, " is less than the significance value of", sigvalue, ", so we reject the null hypothesis that the means of 2010 and 2017 are equal.")
+    out <- paste("The t-value of", ttest$p.value, " is less than the significance value of", sigvalue, ", so we reject the null hypothesis that the means of the largest sectors of 2010 and 2017 are equal.")
   }
   else{
-    out <- paste("The t-value of", ttest$p.value, " is more than the significance value of", sigvalue, ", so we fail to reject the null hypothesis that the means of 2010 and 2017 are equal. There is no statistically significant difference between the means of those two years.")
+    out <- paste("The t-value of", ttest$p.value, " is more than the significance value of", sigvalue, ", so we fail to reject the null hypothesis that the means of the largest sectors of 2010 and 2017 are equal. There is no statistically significant difference between the means of the largest sectors.")
   }
   return(out)
   
@@ -94,7 +88,8 @@ ui <- navbarPage(title="Analysis of Illegal Alien Apprehension Data",
                  
                  tabPanel("About",
                           mainPanel(
-                            p("Each tab examines a different aspect of BP's data on Illegal Alien Apprehension")
+                            h2("Each tab examines a different aspect of BP's data on Illegal Alien Apprehension"),
+                            h3("This project was completed by Matthew Ciaramitaro, Steven Tran, and Praveen Kenderla")
                           )
                  ),
                  tabPanel("Apprehensions by sector",
@@ -104,7 +99,8 @@ ui <- navbarPage(title="Analysis of Illegal Alien Apprehension Data",
                                      choices = list(2010, 2017), selected = 2010)
                         ),
                         mainPanel(
-                          plotOutput("sector")
+                          plotOutput("sector"),
+                          p("Notice how the maximum between 2010 and 2017 has changed from Tuscon to Rio Grande, with each quantity changing dramatically.")
                           
                         )
                       
@@ -113,7 +109,7 @@ ui <- navbarPage(title="Analysis of Illegal Alien Apprehension Data",
                           p("The following barplot examines the change in apprehension number between 2010 and 2017"),
                           sidebarPanel(
                             radioButtons("plottype", h3("Year"),
-                                         choices = list("line", "bar"), selected = "line")
+                                         choices = list("line (years by month)"="line", "line (discrete years)" ="line2",  "bar"="bar"), selected = "line")
                           ),
                           mainPanel(
                             plotOutput("plottype")
@@ -148,7 +144,7 @@ ui <- navbarPage(title="Analysis of Illegal Alien Apprehension Data",
                  ),
                  navbarMenu("More",
                    tabPanel("T testing",
-                          p("The following t-tests was done between the maximums of 2010 and 2017."),
+                          p("The following t-test for difference in means was done between Tuscon 2010 and Rio Grande 2017."),
                           sidebarPanel(
                             textInput(inputId="sigval", 
                                       label="Please enter the significance value for the T test",
@@ -178,7 +174,7 @@ ui <- navbarPage(title="Analysis of Illegal Alien Apprehension Data",
 
 server <- function(input, output) {
   #handling sector plot tab
-  output$sector <- renderPlot(sector_plots(strtoi(input$year)))
+  output$sector <- renderPlot({sector_plots(strtoi(input$year))})
   
   #handling months tab
   months = c("September"= 1, "October"=2, "November"=3, "December"=4, "January"=5, "February"=6, "March"=7, "April"=8,"May"=9,"June"=10,"July"=11,"August"=12  )
@@ -187,7 +183,7 @@ server <- function(input, output) {
     
   })
   #handling yearly apprehensions tab
-  output$plottype <- renderPlot(disp_by_year(input$plottype)) 
+  output$plottype <- renderPlot({disp_by_year(input$plottype)}) 
   
   
   #Performing T test
@@ -206,13 +202,13 @@ server <- function(input, output) {
                     plot(cdf ~ range, type ="l") 
                     polygon(c( range[range <= t$statistic], t$statistic ),  c(cdf[range <= t$statistic], 0), col="blue") #create colored graph
                    }) #cdf of t distribution
-  output$ttest <- renderText(comparep(t, input$sigval))
-  output$tstats <- renderText(paste("Null Hypothesis:", "The difference in means between 2010 and 2017 data is 0\n",
+  output$ttest <- renderText({comparep(t, input$sigval)})
+  output$tstats <- renderText({paste("Null Hypothesis:", "The difference in means between 2010 and 2017 data is 0\n",
                                     "T statistic: ", t$statistic, "\n",
                                     "P Value: ", t$p.value,  "\n",
                                     "Degrees of Freedom", t$parameter, "\n",
                                     "Confidence Interval", t$conf.int
-                   ))
+                   )})
   
 }
 
