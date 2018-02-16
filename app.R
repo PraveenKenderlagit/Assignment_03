@@ -4,6 +4,21 @@ PB2017 <- read.csv("PB Apprehensions 2017.csv", header = TRUE, stringsAsFactors 
 PBmonthly <- read.csv("monthly_sum.csv", header = TRUE, stringsAsFactors = TRUE)
 rownames(PBmonthly) <- PBmonthly[,1]
 
+
+twolineplot <- function(){
+  #overlays the plots of 2 lines 1 blue and 1 red; for use with the apprehensions by month of 2010 and 2017
+  x <-  factor(2:13, labels = c("October", "November", "December", "January", "February", "March", "April","May","June","July","August","September"))
+  t2010 <- as.numeric(PBmonthly[1,2:13])
+  t2017 <- as.numeric(PBmonthly[8, 2:13])
+  plot(t2010 ~ x, type="p", xlab = "Month", ylab = "Apprehensions", main = "Apprehensions By Month", ylim=c(min(t2010),max(t2017)))
+  lines(t2010 ~ x, col="blue")
+  lines(t2017 ~ x, col="red")
+  legend("topleft", 
+         c("2010", "2017"), 
+         fill = c("blue", "red"))
+  
+}
+
 # Displaying Data By Sector
 rownames(BP2010) <- BP2010[,1]
 sector_plots <- function(year){
@@ -28,7 +43,7 @@ sector_plots <- function(year){
 }
 
 disp_by_year <- function(plottype){
-  #Display Data By Years for 2010 to 2017 as plottype; accepts line or bar
+  #Display Data By Years for 2010 to 2017 as plottype; accepts line, line2, or defaults to bar
   if(plottype == "line"){
     x <- as.vector(t(PBmonthly))
     y <- ts(rev(x), start = c(2000, 10), frequency = 12)
@@ -73,6 +88,7 @@ sideBySideBarPlot <- function(month, monthString){
 
 
 comparep <- function(ttest, sigvalue ){
+  #This function determines the message to display in the t test tab based on the user inputted significance value of the test
   if(ttest$p.value < as.double(sigvalue)){
     out <- paste("The t-value of", ttest$p.value, " is less than the significance value of", sigvalue, ", so we reject the null hypothesis that the means of the largest sectors of 2010 and 2017 are equal.")
   }
@@ -164,7 +180,8 @@ ui <- navbarPage(title="Analysis of Illegal Alien Apprehension Data",
                           )
                    ),
                    tabPanel("Cumulative Apprehension Trends",
-                          p("The following line graph examines the trends in months during 2010 and 2017 in a line graph.")    
+                          p("The following line graph examines the trends in months during 2010 and 2017 in a line graph."),
+                          plotOutput("twoline")
                    )
                  ),
                  fluid = T
@@ -209,7 +226,8 @@ server <- function(input, output) {
                                     "Degrees of Freedom", t$parameter, "\n",
                                     "Confidence Interval", t$conf.int
                    )})
-  
+  #generating x axis for comparison line plot
+  output$twoline <- renderPlot(twolineplot())
 }
 
 shinyApp(ui=ui, server=server)
