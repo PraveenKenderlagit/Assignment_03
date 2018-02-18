@@ -29,6 +29,9 @@ barplot(PB2017[1:9,13], names.arg = rownames(PB2017)[1:9],
         border="blue",
         col="yellow")
 
+
+
+
 ##Display Data By Year
 barplot(rev(PBmonthly[1:9,13]), names.arg = rev(rownames(PBmonthly)[1:9]),
         las=2,
