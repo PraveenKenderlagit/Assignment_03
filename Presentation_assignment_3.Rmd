@@ -1,0 +1,207 @@
+---
+title: "Data Science in R: Assignment 3"
+author: "Steven Tran, Matthew David, Praveen Kenderla"
+date: "February 18, 2018"
+output:
+    ioslides_presentation: null
+    smaller: yes
+    slidy_presentation: null
+subtitle: R project 1
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE)
+```
+
+## Loading data sets into the R{.smaller}
+
+```{r}
+BP2010 <- read.csv("BP Apprehensions 2010.csv", header = T, stringsAsFactors = T)
+PB2017 <- read.csv("PB Apprehensions 2017.csv", header = T, stringsAsFactors = T)
+PBmonthly <- read.csv("monthly_sum.csv", header = T, stringsAsFactors = T)
+rownames(PBmonthly) <- PBmonthly[,1]
+```
+
+
+## Converting rows into columns{.smaller} 
+- columns indicate sectors
+```{r}
+a10 <- data.matrix(BP2010)
+B10 <- matrix(NA, nrow = 13, ncol = 9)
+
+c17 <- data.matrix(PB2017)
+D17 <- matrix(NA, nrow = 13, ncol = 9)
+
+for (i in 1:13){              # storing sectors as columns
+  B10 [i, ] <- c(a10 [ , i])
+  D17 [i, ] <- c(c17 [ , i])
+}
+```
+
+## Barplot of months for year 2010{.smaller}
+
+```{r fig.height = 4}
+BPMonth_10 <- barplot(as.matrix(BP2010[1:9,2:13]),  beside = T,
+                 las=2, ylab = "Apprehensions", xlab = "Months",
+                 axisnames=TRUE,
+                 main="2010 Border Patrol Apprehensions by Month",
+                 border="blue")
+```
+
+## Barplot for months for year 2017{.smaller}
+
+```{r fig.height = 4}
+BPMonth_17 <- barplot(as.matrix(PB2017[1:9,2:13]),  beside = T,
+                 las=2, ylab = "Apprehensions", xlab = "Months",
+                 axisnames=TRUE,
+                 main="2017 Border Patrol Apprehensions by Month",
+                 border="red")
+```
+
+## Barplot for sectors for year 2010{.smaller}
+
+``` {r fig.height = 4}
+BPSector_10 <- barplot(B10,  beside = T, names.arg = BP2010$Sector,
+                 las=2, axisnames=TRUE, 
+                 main="2010 Border Patrol Apprehensions by Sector",
+                 border = "blue")
+```
+
+## Barplot for sectors for year 2017{.smaller}
+
+``` {r fig.height = 4}
+BPSector_17 <- barplot(D17,  beside = T, names.arg = BP2010$Sector,
+                       las=2, axisnames=TRUE, 
+                       main="2017 Border Patrol Apprehensions by Sector",
+                       border = "red")
+```
+
+## Apprehension data for different months for year 2010 and 2017 {.smaller}
+
+```{r}
+sideBySideMatrix <- function(month){
+  matrix(c(BP2010[1:9,month], PB2017[1:9,month]), nrow = 2, byrow = TRUE)
+}
+
+sideBySideBarPlot <- function(month, monthString){
+  barplot(sideBySideMatrix(month), names.arg = rownames(BP2010),
+          las=2,
+          axisnames=TRUE,
+          beside=TRUE,
+          col=c("blue", "red"),
+          main = paste("Border Patrol Apprehensions in", monthString, sep=" "))
+  legend("topleft", 
+         c("2010", "2017"), 
+         fill = c("blue", "red"))
+}
+```
+### Function for creating side by side plots
+
+## Plots of months and sector for year 2010 and 2017{.smaller}
+
+``` {r fig.height = 8}
+par(mfrow=c(4,3)); 
+sideBySideBarPlot(2, "Oct"); sideBySideBarPlot(3, "Novr")
+sideBySideBarPlot(4, "Dec"); sideBySideBarPlot(5, "Jan"); 
+sideBySideBarPlot(6, "Feb"); sideBySideBarPlot(7, "March"); 
+```
+
+## Plotting the data in a form of grid {.smaller}
+
+``` {r fig.height = 8}
+par(mfrow=c(4,3));
+sideBySideBarPlot(8, "April"); sideBySideBarPlot(9, "May"); 
+sideBySideBarPlot(10, "June"); sideBySideBarPlot(11, "July"); 
+sideBySideBarPlot(12, "August"); sideBySideBarPlot(13, "September")
+par(mfrow=c(1,1))
+```
+
+## T-test{.smaller}
+
+- For Tucson in 2010 and Rio Grande Valley in 2017, the sectors with the most apprehensions in those years
+
+``` {r}
+t2010 <- t(BP2010)
+t2017 <- t(PB2017)
+t.test(as.numeric(t2010[2:13, 8]), as.numeric(t2017[2:13, 6]))
+```
+### t-test results shows that maximum apprehensions in years 2010 and 2017 has not changed sig
+
+## Altering table to see sum of three month periods{.smaller} 
+
+``` {r}
+m2010 <- subset(BP2010, select = -c(Sector))
+m2010 <- rbind(m2010, colSums(m2010))
+m2010 <- cbind(m2010, rowSums(m2010[1:3]))
+m2010 <- cbind(m2010, rowSums(m2010[4:6]))
+m2010 <- cbind(m2010, rowSums(m2010[7:9]))
+m2010 <- cbind(m2010, rowSums(m2010[10:12]))
+colnames(m2010) <- c(colnames(m2010)[1:12], "Oct-Dec", "Jan-Mar", "Apr-Jun", "Jul-Aug")
+
+m2017 <- subset(PB2017, select = -c(Sector))
+m2017 <- rbind(m2017, colSums(m2017))
+m2017 <- cbind(m2017, rowSums(m2017[1:3]))
+m2017 <- cbind(m2017, rowSums(m2017[4:6]))
+m2017 <- cbind(m2017, rowSums(m2017[7:9]))
+m2017 <- cbind(m2017, rowSums(m2017[10:12]))
+colnames(m2017) <- c(colnames(m2017)[1:12], "Oct-Dec", "Jan-Mar", "Apr-Jun", "Jul-Aug") 
+```
+
+## t-test{.smaller}
+- T-test for Jan-Mar period for 2010 and Oct-Dec period for 2017
+``` {r}
+t.test(m2010[1:9, 4:6], m2017[1:9, 1:3])
+```
+### Maximum sum of 3 months of apprehensions for both 2010 and 2017 are not significantly different
+
+## Plotting time series data{.smaller}
+class: small-code
+- Continuous plot for months for both years
+
+``` {r}
+twolineplot <- function(){
+  x <-  factor(2:13, labels = c("Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "April",
+                                "May","June","July","Aug","Sep"))
+  t2010 <- as.numeric(PBmonthly[1,2:13])
+  t2017 <- as.numeric(PBmonthly[8, 2:13])
+  plot.default(t2010 ~ x, type="n", xlab = "Month", ylab = "Apprehensions", 
+               main = "Apprehensions By Month", ylim = c(min(t2010),max(t2017)), xaxt = "n")
+  axis(1, at = as.numeric(x), labels = levels(x))
+  lines(t2010 ~ x, col="blue")
+  lines(t2017 ~ x, col="red")
+  legend("topleft", 
+         c("2010", "2017"), 
+         fill = c("blue", "red"))
+}
+```
+
+## Plotting time series data (continued){.smaller}
+
+```{r fig.height= 3.5, fig.width = 6}
+twolineplot()
+```
+
+## Time Series data{.smaller}
+``` {r}
+tsplot <- function(){
+ts1 <- data.matrix(subset(PBmonthly, select = -c(year)))
+ts2 <- as.vector(rev(t(ts1)))
+ts3 <- ts(ts2, start = c(2000,10), frequency = 12)
+ts.plot(ts3, gpars=list(xlab="Year", ylab="Apprehensions", 
+                        main = "Average Apprehension per Year", lty=c(1:3)))
+## Adds the mean marks for each year
+y <- as.vector(rev(rowMeans(PBmonthly)))
+x <- 2000:2017
+text(x+1, y-5000, labels = x, col = "blue", cex = 0.8)
+segments(x, y, x+2, y, col = "red")
+}
+```
+## Time Series Plot
+
+```` {r fig.height = 5,fig.width = 8}
+tsplot()
+```
+
