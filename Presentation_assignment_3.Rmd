@@ -68,7 +68,8 @@ BPMonth_17 <- barplot(as.matrix(PB2017[1:9,2:13]),  beside = T,
 BPSector_10 <- barplot(B10,  beside = T, names.arg = BP2010$Sector,
                las=2, axisnames=TRUE, xlab = "Sectors", ylab = "Apprehensions",
                main="2010 Border Patrol Apprehensions by Sector",col = rainbow (12))
-legend ("topleft", inset = 0.02, title = "Months", colnames(BP2010 [2: 13]), fill = rainbow (12), horiz = F, cex = 0.5)
+legend ("topleft", inset = 0.02, title = "Months", colnames(BP2010 [2: 13]), 
+        fill = rainbow (12), horiz = F, cex = 0.5)
 
 ```
 
