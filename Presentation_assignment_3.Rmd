@@ -65,7 +65,7 @@ BPMonth_17 <- barplot(as.matrix(PB2017[1:9,2:13]),  beside = T,
 ## Barplot for sectors for year 2010{.smaller}
 
 ``` {r fig.height = 4}
-BPSector_10 <- barplot(B10,  beside = T, names.arg = BP2010$Sector,
+BPSector_10 <- barplot(B10[2:13, 1:9],  beside = T, names.arg = BP2010$Sector,
                las=2, axisnames=TRUE, xlab = "Sectors", ylab = "Apprehensions",
                main="2010 Border Patrol Apprehensions by Sector",col = rainbow (12))
 legend ("topleft", inset = 0.02, title = "Months", colnames(BP2010 [2: 13]), 
@@ -76,7 +76,7 @@ legend ("topleft", inset = 0.02, title = "Months", colnames(BP2010 [2: 13]),
 ## Barplot for sectors for year 2017{.smaller}
 
 ``` {r fig.height = 4}
-BPSector_17 <- barplot(D17,  beside = T, names.arg = BP2010$Sector,
+BPSector_17 <- barplot(D17[2:13, 1:9],  beside = T, names.arg = BP2010$Sector,
                las=2, axisnames=TRUE, xlab = "Sectors", ylab = "Apprehensions",
                main="2017 Border Patrol Apprehensions by Sector", col = rainbow (12))
 legend ("topright", inset = 0.02, title = "Months", colnames(BP2010 [2: 13]), 
