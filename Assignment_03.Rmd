@@ -1,6 +1,6 @@
 ---
 title: "Assignment 3"
-author: "Matt Ciaramitaro, Praveen Kumar Kenderla, and Steven Tran, "
+author: "Matthew D. Ciaramitaro, Praveen Kumar Kenderla, and Steven Tran, "
 date: "February 19, 2018"
 output: pdf_document
 ---
